@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { v4 as uuidv4 } from "uuid"
 import axios from "axios"
 
@@ -22,16 +22,32 @@ const bookSlice = createSlice({
       )
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(addBookByApi.fulfilled, (state, action) => {
+      return [...state, { ...action.payload, id: uuidv4(), isFavourite: false }]
+      //if there are lib immer we can modify state
+      //state.push({ ...action.payload, id: uuidv4(), isFavourite: false })
+    })
+  },
 })
 
 export const { addBook, deleteBook, toggleFavourite } = bookSlice.actions
 
+//old version
 export const thunkFunction = async (dispatch, getState) => {
   console.log(getState())
   const book = await axios.get("http://localhost:4000/get-book")
   dispatch(addBook({ ...book.data, id: uuidv4(), isFavourite: false }))
   console.log(getState())
 }
+
+export const addBookByApi = createAsyncThunk(
+  "books/addBookViaApi",
+  async () => {
+    const book = await axios.get("http://localhost:4000/get-book")
+    return { ...book.data, id: uuidv4(), isFavourite: false }
+  }
+)
 
 export const selectBooks = (state) => state.books
 export default bookSlice.reducer

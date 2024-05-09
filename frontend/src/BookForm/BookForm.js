@@ -2,13 +2,22 @@ import { useState } from "react"
 import { useDispatch } from "react-redux"
 //uncomment for classic reducer version
 //import { addBook } from "../redux/actionCreators"
-import { addBook } from "../slices/bookSlice"
+//uncomment for classic reducer version
+//import { addBook, addBookByApi, thunkFunction } from "../slices/bookSlice"
 
+import { addBook, addBookByApi } from "../slices/bookSlice"
 import { v4 as uuidv4 } from "uuid"
+import { setError } from "../slices/errorSlice"
 
 const BookForm = () => {
   const [book, setBook] = useState({ title: "", author: "" })
   const dispatch = useDispatch()
+
+  const handleRandomViaApi = () => {
+    //old version
+    //dispatch(thunkFunction)
+    dispatch(addBookByApi())
+  }
 
   const handleAddBook = (e) => {
     e.preventDefault()
@@ -16,6 +25,9 @@ const BookForm = () => {
     if (book.title && book.author) {
       dispatch(addBook({ ...book, id: uuidv4(), isFavourite: false }))
       setBook({ title: "", author: "" })
+    } else {
+      console.log("error")
+      dispatch(setError("Title and author is empty!"))
     }
   }
 
@@ -45,6 +57,9 @@ const BookForm = () => {
         <br />
 
         <button type="submit">Add</button>
+        <button type="button" onClick={handleRandomViaApi}>
+          Add random from API
+        </button>
       </form>
     </>
   )
