@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { addBook } from "../redux/actionCreators"
+//uncomment for classic reducer version
+//import { addBook } from "../redux/actionCreators"
+import { addBook } from "../slices/bookSlice"
 
 import { v4 as uuidv4 } from "uuid"
 

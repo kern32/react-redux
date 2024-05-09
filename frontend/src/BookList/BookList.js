@@ -1,5 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
-import { deleteBook, toggleFavourite } from "../redux/actionCreators"
+//uncomment for classic reducer version
+//import { deleteBook, toggleFavourite } from "../redux/actionCreators"
+import { deleteBook, selectBooks, toggleFavourite } from "../slices/bookSlice"
 import { BsBookmarkStarFill } from "react-icons/bs"
 import { BsBookmarkStar } from "react-icons/bs"
 import {
@@ -9,7 +11,9 @@ import {
 } from "../slices/filterSlice"
 
 const BookList = () => {
-  const books = useSelector((state) => state.books)
+  //uncomment for classic reducer version
+  //const books = useSelector((state) => state.books)
+  const books = useSelector(selectBooks)
   const dispatch = useDispatch()
 
   const isFavouriteSelected = useSelector(selectFavouriteFilter)
