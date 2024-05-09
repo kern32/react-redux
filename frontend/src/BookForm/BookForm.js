@@ -5,17 +5,30 @@ import { useDispatch } from "react-redux"
 //uncomment for classic reducer version
 //import { addBook, addBookByApi, thunkFunction } from "../slices/bookSlice"
 
+import { FaSpinner } from "react-icons/fa"
 import { addBook, addBookByApi } from "../slices/bookSlice"
 import { v4 as uuidv4 } from "uuid"
 import { setError } from "../slices/errorSlice"
+import "./BookForm.css"
 
 const BookForm = () => {
   const [book, setBook] = useState({ title: "", author: "" })
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleRandomViaApi = () => {
+  const handleRandomViaApi = async () => {
     //old version
     //dispatch(thunkFunction)
+
+    try {
+      setIsLoading(true)
+      await dispatch(addBookByApi("http://localhost:4000/get-book"))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleRandomViaApiWithError = () => {
     dispatch(addBookByApi("http://localhost:5000/get-book"))
   }
 
@@ -58,7 +71,18 @@ const BookForm = () => {
 
         <button type="submit">Add</button>
         <button type="button" onClick={handleRandomViaApi}>
-          Add random from API
+          {isLoading ? (
+            <>
+              <span>Loading ...</span>
+              <FaSpinner className="spin" />
+            </>
+          ) : (
+            <span>Add random from API</span>
+          )}
+        </button>
+
+        <button type="button" onClick={handleRandomViaApiWithError}>
+          Show error
         </button>
       </form>
     </>
