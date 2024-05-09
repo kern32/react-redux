@@ -16,7 +16,7 @@ const BookForm = () => {
   const handleRandomViaApi = () => {
     //old version
     //dispatch(thunkFunction)
-    dispatch(addBookByApi())
+    dispatch(addBookByApi("http://localhost:5000/get-book"))
   }
 
   const handleAddBook = (e) => {

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { v4 as uuidv4 } from "uuid"
 import axios from "axios"
+import { setError } from "./errorSlice"
 
 const initialState = []
 
@@ -43,9 +44,15 @@ export const thunkFunction = async (dispatch, getState) => {
 
 export const addBookByApi = createAsyncThunk(
   "books/addBookViaApi",
-  async () => {
-    const book = await axios.get("http://localhost:4000/get-book")
-    return { ...book.data, id: uuidv4(), isFavourite: false }
+  async (url, thunkAPI) => {
+    console.log()
+    try {
+      const book = await axios.get(url)
+      return { ...book.data, id: uuidv4(), isFavourite: false }
+    } catch (error) {
+      thunkAPI.dispatch(setError(error.message))
+      throw error
+    }
   }
 )
 
